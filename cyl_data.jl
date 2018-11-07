@@ -1,7 +1,6 @@
 using Plots
 pyplot()
 
-
 using HDF5
 
 # Construct the h5 filename at the specified iteration
@@ -20,6 +19,7 @@ function get_snapshot(iteration)
     names(f)
     u = read(f, "control_input")
     x = read(f, "sol_data")
+    x = x[1,:,:]
     x,u
 end
 
@@ -42,7 +42,7 @@ function fill_snapshots(Omega, Xp, first=1)
     Omega, Xp
 end
 
-last_snap = 100
+last_snap = 1000
 n, q = get_snapshot_size()
 Omega = Array{Float64,2}(n+q, last_snap-1)
 Xp = Array{Float64,2}(n, last_snap-1)
@@ -51,9 +51,11 @@ fill_snapshots(Omega, Xp)
 plot(1:last_snap-1, Omega[end, :])
 
 
+
 ## Compute the singular value decomposition of Omega
 U, S, V = svd(Omega)
-thresh = 1e-3
+thresh = 0
+S
 rtil = length(S[S .> thresh])
 
 # Truncate the matrices
@@ -76,6 +78,9 @@ U_2 = Util[n+1:n+q, :]
 approxA = Uhat' * Xp * Vtil * inv(Stil) * U_1' * Uhat
 approxB = Uhat' * Xp * Vtil * inv(Stil) * U_2'
 
-W,D = eig(approxA)
-phi = Xp * Vtil * inv(Stil) * U_1' * Uhat * W
+D, W = eig(approxA)
+phi = (Xp * Vtil*inv(Stil)) * (U_1' * Uhat * W)
+x1 = abs.(reshape(phi[:,3], (1, 256, 128)))
+plot(1:256, 1:128, x1[1,:,:]')
+
 
