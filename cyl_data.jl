@@ -2,7 +2,7 @@ using HDF5
 
 # Construct the h5 filename at the desired iteration for the given naming and storage scheme
 function get_filename(iteration, dir, base = "sol_data_", pad = 4, ext = ".h5")
-    string(dir, base, lpad(iteration, 4, 0), ext)
+    string(dir, base, lpad(string(iteration), 4, '0'), ext)
 end
 
 # Construct the h5 filename of the controlled cylinder at the desired iteration
@@ -28,7 +28,7 @@ function fill_control_snapshots(Omega, Xp, dof = 3)
         u,x = read_snapshot(get_controlled_cyl_filename(i))
         x = x[dof,:,:]
         (i <= l) && (Omega[1:n,i] = x[:])
-        (i <= l) && (Omega[n+1:end,i] = u)
+        (i <= l) && (Omega[n+1:end,i] = [u])
         (i > 2) && (Xp[:,i-1] = x[:])
     end
 end
