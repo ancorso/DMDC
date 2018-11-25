@@ -80,7 +80,7 @@ function DMDc(Omega, Xp, thresh = 0.1)
     approxB = U_hat' * Xp * V_til * sinv * U_2'
 
     D, W = eigen(approxA)
-    phi = (Xp * Vtil * sinv) * (U_1' * U_hat * W)
+    phi = (Xp * V_til * sinv) * (U_1' * U_hat * W)
 
     return approxA, approxB, phi, W
 end
