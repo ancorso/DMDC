@@ -2,7 +2,8 @@ include("cyl_data.jl")
 include("utils.jl")
 
 # Read in the snapshots
-last_snap = 6092
+# last_snap = 6092
+last_snap = 100
 println("Reading in snapshots 1:", last_snap)
 q,n = length.(read_snapshot(get_controlled_cyl_filename(1)))
 n = convert(Int, n / 4)
@@ -14,16 +15,15 @@ fill_control_snapshots(Omega, Xp)
 
 # Compute the dynamics
 println("Computing dynamics...")
-A, B, phi, D = DMDc(Omega, Xp)
+A, B, phi, D, U_hat = DMDc(Omega, Xp)
 println("A was ", size(A))
 
 
 # save the corresponding dynamics
-println("Saving dynamics to file...A...")
-h5write("dynamics.h5", "A", A)
-print("B...")
-h5write("dynamics.h5", "B", B)
-print("phi...")
-h5write("dynamics.h5", "phi", abs.(phi))
-println("D...")
-h5write("dynamics.h5", "D", abs.(D))
+println("Saving dynamics to file...")
+h5open("dynamics.h5", "w") do file
+    write(file, "A", A)
+    write(file, "B", B)
+    write(file, "U_hat", U_hat)
+end
+
