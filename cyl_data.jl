@@ -22,11 +22,10 @@ function read_snapshot(filename)
 end
 
 # Construct the solution data and control matrices
-function fill_control_snapshots(Omega, Xp, dof = 3)
+function fill_control_snapshots(Omega, Xp)
     l, n = size(Omega, 2), size(Xp, 1)
     for i=1:l+1
         u,x = read_snapshot(get_controlled_cyl_filename(i))
-        x = x[dof,:,:]
         (i <= l) && (Omega[1:n,i] = x[:])
         (i <= l) && (Omega[n+1:end,i] = [u])
         (i > 2) && (Xp[:,i-1] = x[:])
@@ -34,10 +33,10 @@ function fill_control_snapshots(Omega, Xp, dof = 3)
 end
 
 # Construct the solution data matrices for the static case
-function fill_static_snapshots(X, Xp, dof = 3)
+function fill_static_snapshots(X, Xp)
     n, last = size(X)
     for i=0:last
-        x = read_snapshot(get_static_cyl_filename(i))[1][dof,:,:]
+        x = read_snapshot(get_static_cyl_filename(i))[1]
         (i < last) && (X[:,i+1] = x[:])
         (i > 0) && (Xp[:,i] = x[:])
     end
