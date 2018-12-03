@@ -9,6 +9,18 @@ end
 get_controlled_cyl_filename(iteration) = get_filename(iteration, "data/rot_cyl_re50/")
 # Construct the h5 filename of the static cylinder at the desired iteration
 get_static_cyl_filename(iteration) = get_filename(iteration, "data/static_cyl/")
+# Construct the h5 filename of the dfc run
+get_dfc_test_filename(iteration) = get_filename(iteration, "dfc_run_data/")
+
+# Read an h5 file and conver it to a dictionary
+function h5_to_dict(filename)
+    f = h5open(filename, "r")
+    output = Dict()
+    for n in names(f)
+        output[n] = read(f, n)
+    end
+    return output
+end
 
 # Read the h5 file at the specified iteration and return the solution data and the control input
 function read_snapshot(filename)

@@ -1,0 +1,80 @@
+diff --git a/pyfr/plugins/controller.py b/pyfr/plugins/controller.py
+index 792b967..26b8b2a 100644
+--- a/pyfr/plugins/controller.py
++++ b/pyfr/plugins/controller.py
+@@ -81,6 +81,7 @@ class ControllerPlugin(BasePlugin):
+         self.save_data = self.cfg.getint(cfgsect, 'savedata')
+         self.set_omega = self.cfg.getint(cfgsect, 'setomega')
+         self.perform_mpc = (self.cfg.getint(cfgsect, 'mpc') == 1)
++        self.perform_dmdc = (self.cfg.getint(cfgsect, 'dmdc') == 1)
+ 
+         # List of points to be sampled and format
+         self.pts = self.cfg.getliteral(cfgsect, 'samp-pts')
+@@ -89,6 +90,38 @@ class ControllerPlugin(BasePlugin):
+         # Define directory where solution snapshots should be saved
+         self.save_dir = self.cfg.getpath(cfgsect, 'save_dir')
+ 
++        # If performing dmdc, load matrices
++        if self.perform_dmdc:
++            # Set constraints for mpc
++            self.R = self.cfg.getfloat(cfgsect, 'R')
++            self.u_max = self.cfg.getfloat(cfgsect, 'u_max')
++             # Define directory containing training scripts
++            self.training_path = self.cfg.getpath(cfgsect, 'training_path')
++            sys.path.append(self.training_path)
++
++
++            # Read in args
++            with open(self.training_path + '/args.json') as args_dict:
++                args_dict = json.load(args_dict,)
++            self.args = argparse.Namespace()
++            for (k, v) in args_dict.items():
++                vars(self.args)[k] = v
++
++
++            # Define array to hold old time snapshots and control inputs of the system
++            self.X = np.zeros((self.args.seq_length//2 + 1, 128, 256, 4), dtype=np.float32)
++            self.u = np.zeros((self.args.seq_length//2, self.args.action_dim), dtype=np.float32)
++
++            # Load desired attributes from file
++            f = h5py.File('./dynamics.h5', 'r')
++            self.A = np.array(f['A']).T
++            self.B = np.array(f['B']).T
++            self.U_hat_t = np.array(f['U_hat']).T
++            self.args.code_dim = np.size(self.U_hat_t, 0)
++
++            f = h5py.File(self.cfg.getpath(cfgsect, 'base_flow'), 'r')
++            self.goal_state = self.U_hat_t @ np.array(f['sol_data']).flatten()
++
+         # If performing mpc, then load network
+         if self.perform_mpc:
+ 
+@@ -292,7 +325,7 @@ class ControllerPlugin(BasePlugin):
+                 sol_data[idx1, idx2] = data[i][1]
+ 
+             # Update running total of previous states
+-            if self.perform_mpc: self.X = np.vstack((self.X[1:], np.expand_dims(sol_data, axis=0)))
++            if self.perform_mpc or self.perform_dmdc: self.X = np.vstack((self.X[1:], np.expand_dims(sol_data, axis=0)))
+ 
+             # Initialize values
+             t = intg.tcurr
+@@ -301,6 +334,10 @@ class ControllerPlugin(BasePlugin):
+ 
+             if self.set_omega == 0:
+                 omega = 0.0
++            elif self.perform_dmdc:
++                x0 = self.U_hat_t @ sol_data.flatten()
++                omega = self._find_mpc_input(self.A, self.B, x0)
++                # self.u = np.concatenate((self.u[1:], np.expand_dims(np.array([omega]), axis=0)))
+             elif self.perform_mpc:
+                 # Find model of system and determine optimal input with MPC
+                 try:
+@@ -340,7 +377,7 @@ class ControllerPlugin(BasePlugin):
+                 f = h5py.File(filename, 'w')
+                 f['sol_data'] = sol_data
+                 f['control_input'] = omega
+-                if self.perform_mpc: f['cost'] = np.linalg.norm(self.goal_state - x0)
++                if self.perform_mpc or self.perform_dmdc: f['cost'] = np.linalg.norm(self.goal_state - x0)
+                 f.close()
+         else:
+             omega = None
