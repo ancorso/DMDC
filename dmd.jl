@@ -6,7 +6,7 @@ include("cyl_data.jl")
 include("utils.jl")
 
 last_snap = 999
-n = convert(Int, length(read_snapshot(get_static_cyl_filename(999))[1]) / 4)
+n = convert(Int, length(read_snapshot(get_static_cyl_filename(999))[1]))
 X = Array{Float64,2}(undef, n, last_snap)
 Xp = Array{Float64,2}(undef, n, last_snap)
 fill_static_snapshots(X, Xp)
@@ -14,7 +14,7 @@ fill_static_snapshots(X, Xp)
 # Animation of data
 # anim = @animate for i=1:last_snap-1
 #     println(string("saving iteration ", i))
-#     ppx = reshape(X[:,i], 4, 256, 128)[1,:,:]
+    ppx = reshape(X[:,i], 4, 256, 128)[1,:,:]
 #     plot(1:256, 1:128, ppx', fill=true)
 # end
 # gif(anim, "./static_cyl.gif", fps = 15)
