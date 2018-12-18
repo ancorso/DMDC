@@ -1,3 +1,5 @@
+# Loads in solution files and plots the cost function and control input
+# as a function of time.
 using HDF5
 using Plots
 pyplot()

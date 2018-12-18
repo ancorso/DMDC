@@ -1,15 +1,17 @@
+# Example of a dynamic mode decomposition
+
 using Plots
 using LinearAlgebra
 
 pyplot()
-include("cyl_data.jl")
-include("utils.jl")
+include("read_data.jl")
+include("dmdc.jl")
 
 last_snap = 999
-n = convert(Int, length(read_snapshot(get_static_cyl_filename(999))[1]))
+n = convert(Int, length(read_snapshot(get_filename(999, "data/static_cyl/"))[1]))
 X = Array{Float64,2}(undef, n, last_snap)
 Xp = Array{Float64,2}(undef, n, last_snap)
-fill_static_snapshots(X, Xp)
+fill_static_snapshots(X, Xp, "data/static_cyl/")
 
 # Animation of data
 # anim = @animate for i=1:last_snap-1
