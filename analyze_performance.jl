@@ -3,7 +3,7 @@
 using HDF5
 using Plots
 pyplot()
-include("cyl_data.jl")
+include("read_data.jl")
 
 fldr = "dfc_run_data/"
 min_file = 1

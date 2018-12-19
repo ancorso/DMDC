@@ -26,6 +26,16 @@ function read_snapshot(filename)
     return output
 end
 
+function get_control_sequence(iter_rng, dir)
+    control = []
+    for iteration in iter_rng
+        println("Loading file: ", iteration)
+        dict = h5_to_dict(get_filename(iteration, dir))
+        push!(control, dict["control_input"])
+    end
+    control
+end
+
 # Construct the solution data and control matrices
 function fill_control_snapshots(Omega, Xp, dir)
     l, n = size(Omega, 2), size(Xp, 1)
