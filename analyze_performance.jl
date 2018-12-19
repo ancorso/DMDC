@@ -5,7 +5,7 @@ using Plots
 pyplot()
 include("read_data.jl")
 
-fldr = "dfc_run_data/"
+fldr = "dfc_run_data_new_model/"
 min_file = 1
 max_file = 752
 

@@ -10,7 +10,7 @@ dir = "data/re50_17Dec2018/"
 
 # Read the number of snapshots from the command line
 if length(ARGS) > 0
-    last_snapshot = convert(Int, ARGS[1])
+    last_snapshot = parse(Int, ARGS[1])
 end
 if length(ARGS) > 1
     dir = ARGS[2]
