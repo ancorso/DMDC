@@ -5,7 +5,7 @@
 include("read_data.jl")
 include("dmdc.jl")
 
-last_snapshot = 600
+last_snapshot = 754
 dir = "data/re50_17Dec2018/"
 
 # Read the number of snapshots from the command line

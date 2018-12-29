@@ -10,7 +10,8 @@ f = h5open("X_u.h5", "r")
 X = read(f, "X")
 u = read(f, "u")
 T = size(X,4)
-X = reshape(X, (:, T))
+data_index = 3
+X = reshape(X[data_index, :, :, :], (:, T))
 
 # concatenate the data to form the input and output matrices
 size(X[:, 1:T-1])

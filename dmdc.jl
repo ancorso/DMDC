@@ -30,7 +30,7 @@ function DMD(X, Xp, thresh)
     D, W = sorted_eig(Atil)
     phi = Xp * Vr * sinv * W
 
-    return Atil, phi, D
+    return Atil, phi, D, W, Ur
 end
 
 function compressed_DMD(X, Xp, samples, thresh)

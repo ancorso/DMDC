@@ -5,9 +5,9 @@ using Plots
 pyplot()
 include("read_data.jl")
 
-fldr = "dfc_run_data_new_model/"
+fldr = "dmdc_online_new_opt/"
 min_file = 1
-max_file = 752
+max_file = 756
 
 
 control = []
@@ -25,5 +25,5 @@ p1 = plot(x, cost, title = "Cost function vs. iteration", xlabel="Iteration", yl
 p2 = plot(x, control, title = "Control function vs. iteration", xlabel="Iteration", ylabel = "Control")
 
 plot(p1, p2, size = (1200,400))
-savefig("dfc_resid_omega_2")
+savefig("dmdc_online_w128_partialA0_new_opt")
 

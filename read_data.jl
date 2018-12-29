@@ -37,23 +37,23 @@ function get_control_sequence(iter_rng, dir)
 end
 
 # Construct the solution data and control matrices
-function fill_control_snapshots(Omega, Xp, dir)
+function fill_control_snapshots(Omega, Xp, dir, index = Colon())
     l, n = size(Omega, 2), size(Xp, 1)
     for i=1:l+1
         u,x = read_snapshot(get_filename(i, dir))
-        (i <= l) && (Omega[1:n,i] = x[:])
+        (i <= l) && (Omega[1:n,i] = x[index, :, :][:])
         (i <= l) && (Omega[n+1:end,i] = [u])
-        (i > 2) && (Xp[:,i-1] = x[:])
+        (i > 2) && (Xp[:,i-1] = x[index, :, :][:])
     end
 end
 
 # Construct the solution data matrices for the static case
-function fill_static_snapshots(X, Xp, dir)
+function fill_static_snapshots(X, Xp, dir, index = Colon())
     n, last = size(X)
     for i=0:last
         x = read_snapshot(get_filename(i, dir))[1]
-        (i < last) && (X[:,i+1] = x[:])
-        (i > 0) && (Xp[:,i] = x[:])
+        (i < last) && (X[:,i+1] = x[index, :, :][:])
+        (i > 0) && (Xp[:,i] = x[index, :, :][:])
     end
 end
 
