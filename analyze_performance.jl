@@ -5,9 +5,9 @@ using Plots
 pyplot()
 include("read_data.jl")
 
-fldr = "dmdc_online_new_opt/"
+fldr = "dmdc_A_prop_300_T_2/"
 min_file = 1
-max_file = 756
+max_file = 753
 
 
 control = []

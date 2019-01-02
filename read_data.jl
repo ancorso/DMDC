@@ -40,7 +40,9 @@ end
 function fill_control_snapshots(Omega, Xp, dir, index = Colon())
     l, n = size(Omega, 2), size(Xp, 1)
     for i=1:l+1
-        u,x = read_snapshot(get_filename(i, dir))
+        data_dict = h5_to_dict(get_filename(i, dir))
+        u = data_dict["control_input"]
+        x = data_dict["sol_data"]
         (i <= l) && (Omega[1:n,i] = x[index, :, :][:])
         (i <= l) && (Omega[n+1:end,i] = [u])
         (i > 2) && (Xp[:,i-1] = x[index, :, :][:])

@@ -1,3 +1,4 @@
+using Statistics
 # find the point of max difference between timesteps and get the history at that point
 function exact_sol_at_point(X)
     mx, index = findmax(X[:,1] - X[:,2])
@@ -50,3 +51,25 @@ function cap(n, cap_val = 1)
     end
     return n
 end
+
+# A, B and Uhat are the dmdc params
+# X is the true data
+
+function average_prediction_error(A, B, U_hat, Omega, starting_points, T)
+    average_err = []
+    for s in starting_points
+        println("s= ", s)
+        x = Omega[1:n,s]
+        errl = []
+        for i=s+1:s+T
+            xtil = U_hat' * x
+            Xtil_p1 = A * xtil + B * Omega[n+1:n+q, i-1]
+            x = U_hat * Xtil_p1
+
+            push!(errl, norm(Omega[1:n, i] - x))
+        end
+        push!(average_err, mean(errl))
+    end
+    return average_err
+end
+
