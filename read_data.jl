@@ -37,15 +37,17 @@ function get_control_sequence(iter_rng, dir)
 end
 
 # Construct the solution data and control matrices
-function fill_control_snapshots(Omega, Xp, dir, index = Colon())
+function fill_control_snapshots(Omega, Xp, dir, data_index = Colon(), ts = 1, te = nothing)
     l, n = size(Omega, 2), size(Xp, 1)
-    for i=1:l+1
-        data_dict = h5_to_dict(get_filename(i, dir))
+    (te == nothing) && (te = l+1)
+    for iter=ts:te
+        data_dict = h5_to_dict(get_filename(iter, dir))
+        i = iter - ts + 1
         u = data_dict["control_input"]
         x = data_dict["sol_data"]
-        (i <= l) && (Omega[1:n,i] = x[index, :, :][:])
+        (i <= l) && (Omega[1:n,i] = x[data_index, :, :][:])
         (i <= l) && (Omega[n+1:end,i] = [u])
-        (i > 2) && (Xp[:,i-1] = x[index, :, :][:])
+        (i > 2) && (Xp[:,i-1] = x[data_index, :, :][:])
     end
 end
 

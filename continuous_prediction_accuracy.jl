@@ -6,12 +6,12 @@ include("dmdc.jl")
 include("helpers.jl")
 
 # Set window ranges
-dfile = "A_B_Uhat_prop_control_4x_150_t1e-4.h5"
+dfile = "A_B_Uhat.h5"
 dir = "prop_control/"
 data_index = Colon()
 w = 500
 stp = 7
-T = 2 # prediction window
+T = 4 # prediction window
 
 # Fill the data
 println("Loading data from files...")
