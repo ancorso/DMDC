@@ -10,6 +10,8 @@ f = h5open("X_u.h5", "r")
 X = read(f, "X")
 u = read(f, "u")
 T = size(X,4)
+println(size(X))
+println(size(u))
 data_index = Colon()
 X = reshape(X[data_index, :, :, :], (:, T))
 
@@ -20,8 +22,7 @@ Xp = X[:, 2:T]
 
 # Compute the dynamics
 println("Computing dynamics...")
-A, B, phi, D, U_hat = DMDc(Omega, Xp, 1e-6)
-U_hat = convert(Array{Float64, 2}, U_hat')
+A, B, phi, D, U_hat = DMDc(Omega, Xp, 1e-9)
 println("A was ", size(A))
 println("Uhat is: ", typeof(U_hat), " size: ", size(U_hat))
 

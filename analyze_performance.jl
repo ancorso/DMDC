@@ -5,11 +5,12 @@ using Plots
 pyplot()
 include("read_data.jl")
 
-fldr = "dmdc_A_prop_300_T_2/"
+fldr = "dmdc_A_prop_online_300_T_4/"
 min_file = 1
 max_file = 753
 
-
+dict = h5_to_dict(get_filename(1, fldr))
+dict["control_input"]
 control = []
 cost = []
 for iteration in range(min_file, max_file)
@@ -25,5 +26,5 @@ p1 = plot(x, cost, title = "Cost function vs. iteration", xlabel="Iteration", yl
 p2 = plot(x, control, title = "Control function vs. iteration", xlabel="Iteration", ylabel = "Control")
 
 plot(p1, p2, size = (1200,400))
-savefig("dmdc_online_w128_partialA0_new_opt")
+savefig("dmdc_A_prop_online_300_T_4")
 
