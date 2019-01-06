@@ -2,12 +2,12 @@
 # as a function of time.
 using HDF5
 using Plots
-pyplot()
+pgfplots()
 include("read_data.jl")
 
-fldr = "dmdc_A_prop_online_300_T_4/"
+fldr = "dmdc_A_prop_300_T_16/"
 min_file = 1
-max_file = 753
+max_file = 750
 
 dict = h5_to_dict(get_filename(1, fldr))
 dict["control_input"]
@@ -26,5 +26,5 @@ p1 = plot(x, cost, title = "Cost function vs. iteration", xlabel="Iteration", yl
 p2 = plot(x, control, title = "Control function vs. iteration", xlabel="Iteration", ylabel = "Control")
 
 plot(p1, p2, size = (1200,400))
-savefig("dmdc_A_prop_online_300_T_4")
+savefig("dmdc_working")
 

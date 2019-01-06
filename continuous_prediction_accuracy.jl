@@ -1,17 +1,18 @@
 using Plots
 using Statistics
-pyplot()
+using LaTeXStrings
+pgfplots()
 include("read_data.jl")
 include("dmdc.jl")
 include("helpers.jl")
 
 # Set window ranges
-dfile = "A_B_Uhat.h5"
+dfile = "A_B_Uhat_prop_control_4x_300.h5"
 dir = "prop_control/"
 data_index = Colon()
-w = 500
+w = 600
 stp = 7
-T = 4 # prediction window
+T = 16 # prediction window
 
 # Fill the data
 println("Loading data from files...")
@@ -41,5 +42,5 @@ title!(string("Average Prediction Error \ndynamics: ", dfile, "\ndata: ", dir))
 xlabel!("Iteration")
 ylabel!("log(error)")
 display(p)
-savefig("A_from_prop4x_700_on_dmdc_30Dec_data")
+savefig("pred_error_working")
 

@@ -3,10 +3,10 @@ include("dmdc.jl")
 include("helpers.jl")
 
 # Set window ranges
-dir = "sol_data/"
+dir = "sin_omega/"
 data_index = Colon()
 ts = 1 # training starting location
-te = 300 # training end
+te = 600 # training end
 thresh = 1e-9 # threshold for dmdc
 
 if length(ARGS) > 1
