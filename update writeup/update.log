@@ -1,4 +1,4 @@
-This is LuaTeX, Version 0.95.0 (TeX Live 2016)  (format=lualatex 2017.5.2)  5 JAN 2019 18:22
+This is LuaTeX, Version 0.95.0 (TeX Live 2016)  (format=lualatex 2017.5.2)  6 JAN 2019 08:31
  restricted system commands enabled.
  file:line:error style messages enabled.
 **update.tex
@@ -23,7 +23,7 @@ Inserting `luaotfload.aux.patch_cambria_domh' at position 2 in `luaotfload.patch
 Inserting `luaotfload.aux.fixup_fontdata' at position 1 in `luaotfload.patch_font_unsafe'.
 Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font'.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'.
-luaotfload | main : initialization completed in 0.789 seconds
+luaotfload | main : initialization completed in 0.496 seconds
 Babel <3.9r> and hyphenation patterns for 1 language(s) loaded.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
@@ -804,55 +804,126 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 55.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 \c__siunitx_mathtt_int=\count267
-(load luc: /Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc)(load luc: /Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc) <../images/training_data.png, id=4, 438.63875pt x 296.10625pt>
-File: ../images/training_data.png Graphic file (type png)
- <use ../images/training_data.png>
-Package luatex.def Info: ../images/training_data.png used on input line 75.
-(luatex.def)             Requested size: 219.31883pt x 148.05275pt.
- <../images/dmdc_working.png, id=5, 849.1725pt x 294.09875pt>
-File: ../images/dmdc_working.png Graphic file (type png)
- <use ../images/dmdc_working.png>
-Package luatex.def Info: ../images/dmdc_working.png used on input line 83.
-(luatex.def)             Requested size: 424.5852pt x 147.04901pt.
- <../images/dmdc_offline_d1_resid_omega.png, id=6, 867.24pt x 289.08pt>
-File: ../images/dmdc_offline_d1_resid_omega.png Graphic file (type png)
- <use ../images/dmdc_offline_d1_resid_omega.png>
-Package luatex.def Info: ../images/dmdc_offline_d1_resid_omega.png used on input line 94.
-(luatex.def)             Requested size: 433.61894pt x 144.53964pt.
- [1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+(load luc: /Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc)(load luc: /Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc)
 
-<../images/training_data.png>] [2<../images/dmdc_working.png><../images/dmdc_offline_d1_resid_omega.png>] <../images/pred_error_working.png, id=24, 428.60126pt x 297.11pt>
-File: ../images/pred_error_working.png Graphic file (type png)
- <use ../images/pred_error_working.png>
-Package luatex.def Info: ../images/pred_error_working.png used on input line 125.
-(luatex.def)             Requested size: 214.3001pt x 148.55463pt.
+LaTeX Warning: File `../images/training_data.png' not found on input line 75.
 
-<../images/dfc_control_input.png, id=25, 430.60875pt x 296.10625pt>
-File: ../images/dfc_control_input.png Graphic file (type png)
- <use ../images/dfc_control_input.png>
-Package luatex.def Info: ../images/dfc_control_input.png used on input line 132.
-(luatex.def)             Requested size: 215.30383pt x 148.05275pt.
- <../images/pred_error_not_working.png, id=26, 424.58624pt x 297.11pt>
-File: ../images/pred_error_not_working.png Graphic file (type png)
- <use ../images/pred_error_not_working.png>
-Package luatex.def Info: ../images/pred_error_not_working.png used on input line 137.
-(luatex.def)             Requested size: 212.2926pt x 148.55463pt.
- [3<../images/pred_error_working.png>] [4<../images/dfc_control_input.png><../images/pred_error_not_working.png>] (./update.aux))
+
+./update.tex:75: Package luatex.def Error: File `../images/training_data.png' not found.
+
+See the luatex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.75 ...hics[scale=0.5]{../images/training_data.png}
+                                                  
+Using draft setting for this image.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX Font Info:    Try loading font information for TU+pcr on input line 75.
+LaTeX Font Info:    No file TUpcr.fd. on input line 75.
+
+LaTeX Font Warning: Font shape `TU/pcr/m/n' undefined
+(Font)              using `TU/lmr/m/n' instead on input line 75.
+
+
+LaTeX Warning: File `../images/dmdc_working.png' not found on input line 83.
+
+
+./update.tex:83: Package luatex.def Error: File `../images/dmdc_working.png' not found.
+
+See the luatex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.83 ...phics[scale=0.5]{../images/dmdc_working.png}
+                                                  
+Using draft setting for this image.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: File `../images/dmdc_offline_d1_resid_omega.png' not found on input line 94.
+
+
+./update.tex:94: Package luatex.def Error: File `../images/dmdc_offline_d1_resid_omega.png' not found.
+
+See the luatex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.94 ...]{../images/dmdc_offline_d1_resid_omega.png}
+                                                  
+Using draft setting for this image.
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+]
+
+./update.tex:125: LaTeX Error: File `../images/pred_error_working' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.125 ...cs[scale=0.5]{../images/pred_error_working}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./update.tex:132: LaTeX Error: File `../images/dfc_control_input' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.132 ...ics[scale=0.5]{../images/dfc_control_input}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+./update.tex:137: LaTeX Error: File `../images/pred_error_not_working' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.137 ...cale=0.5]{../images/pred_error_not_working}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[2] [3] (./update.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+)
 
 Here is how much of LuaTeX's memory you used:
- 25229 strings out of 494577
+ 25321 strings out of 494577
  100000,552014 words of node,token memory allocated
  929 words of node memory still in use:
    7 hlist, 2 vlist, 2 rule, 48 glue, 1 kern, 8 sub_mlist, 35 attribute, 52 glue_spec, 35 attribute_list, 1 write nodes
-   avail lists: 1:1,2:351,3:84,4:24,5:169,6:2414,7:679,8:23,9:190,10:8,11:195
- 28544 multiletter control sequences out of 65536+600000
- 50 fonts using 3034479 bytes
+   avail lists: 1:1,2:369,3:84,4:28,5:171,6:2550,7:697,8:31,9:189,10:8,11:208
+ 28523 multiletter control sequences out of 65536+600000
+ 50 fonts using 3034791 bytes
  54i,12n,73p,823b,541s stack positions out of 5000i,500n,10000p,200000b,100000s
 </usr/local/texlive/2016/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf></usr/local/texlive/2016/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on update.pdf (4 pages, 226958 bytes).
+Output written on update.pdf (3 pages, 59248 bytes).
 
-PDF statistics: 66 PDF objects out of 1000 (max. 8388607)
- 36 compressed objects within 1 object stream
+PDF statistics: 51 PDF objects out of 1000 (max. 8388607)
+ 34 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 131072)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

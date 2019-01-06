@@ -1,11 +1,11 @@
 # Fdb version 3
-["lualatex"] 1546741339 "update.tex" "update.pdf" "update" 1546741345
-  "../images/dfc_control_input.png" 1546741314 9633 4ff178591bb6089f6b38392a000724eb ""
-  "../images/dmdc_offline_d1_resid_omega.png" 1544827872 101495 599eb9aa9da0b2ce085c2ae91f7df339 ""
-  "../images/dmdc_working.png" 1546734386 12466 c49b7360f22c343835ccc1d2875cac10 ""
-  "../images/pred_error_not_working.png" 1546735283 10820 34ef1ad098cbbf19e43a9eb6c226a313 ""
-  "../images/pred_error_working.png" 1546735405 5105 8ea2418b4bba6fd44c39a85c677fabf0 ""
-  "../images/training_data.png" 1546734227 8772 47aa0c1d1fa19751a65f0d2d1182c136 ""
+["lualatex"] 1546792299 "update.tex" "update.pdf" "update" 1546792304
+  "../images/dfc_control_input" 0 -1 0 ""
+  "../images/dmdc_offline_d1_resid_omega.png" 0 -1 0 ""
+  "../images/dmdc_working.png" 0 -1 0 ""
+  "../images/pred_error_not_working" 0 -1 0 ""
+  "../images/pred_error_working" 0 -1 0 ""
+  "../images/training_data.png" 0 -1 0 ""
   "/Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1493743102 134930 34c2c90903c2e9bd4c81500e375b2a71 ""
   "/Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc" 1493743104 135890 10f65b9803c653141c8747be6f420e6b ""
   "/Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc" 1493743103 135293 ab66df33c0358086a04773d7cbbbc589 ""
@@ -201,10 +201,10 @@
   "/usr/local/texlive/2016/texmf-dist/tex/luatex/lualibs/lualibs-util-tpl.lua" 1480098845 7100 ccfb5023bc761673396964848d85b5e2 ""
   "/usr/local/texlive/2016/texmf-dist/tex/luatex/luaotfload/luaotfload-characters.lua" 1485820867 1548690 99578c3eff8b68cae3da45a4a7cbfcf2 ""
   "/usr/local/texlive/2016/texmf-var/web2c/luatex/lualatex.fmt" 1493742330 1268248 1425b524eda1c90e09d2412daa5d787c ""
-  "update.aux" 1546741345 1570 726dd2414d59835d006ad2edc9e54c67 ""
-  "update.tex" 1546741337 8009 b57424fdc9b2c62afa31421dacf11504 ""
+  "update.aux" 1546792304 1570 739b8f6e850b2c7742e24f0b03bd569e ""
+  "update.tex" 1546792298 8035 e6df097a80757189f767a976e5a41250 ""
   (generated)
+  "update.aux"
   "update.log"
   "/Users/anthonycorso/Library/texlive/2016/texmf-var/m_t_x_t_e_s_t.tmp"
-  "update.aux"
   "update.pdf"

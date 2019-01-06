@@ -64,13 +64,13 @@ Broadly speaking, DMDc uses singular value decomposition to create a low-dimensi
 \end{align*}
 where the number of state variables, $x$ is much larger than the number of state variables $\tilde{x}$.
 
-I implemented DMDc in julia at the following repository (which includes a patch for running MPC with DMDc in PyFR). Below is an update on what is working with DMDc and what is currently not working.
+I implemented DMDc in julia at https://github.com/ancorso/DMDC (which includes a patch for running MPC with DMDc in PyFR). Below is an update on what is working with DMDc and what is currently not working.
 
 \section*{What works}
-I've have shown that DMDc works for suppressing vortex shedding in a very narrow set of circumstances (see fig \ref{fig:dmdc_working}). Namely, when the dynamics and control matrices ($A$ and $B$) are trained from snapshots taken from the proportional control of the same system (see figure \ref{fig:training_data} for the control input of the data that $A$ and $B$ were trained from). In this case, the DMDc + MPC algorithm produces essentially the same control policy and successfully suppresses the vortex shedding.
+I've have shown that DMDc works for suppressing vortex shedding in a very narrow set of circumstances (see fig \ref{fig:dmdc_working}). Namely, when the dynamics and control matrices ($A$ and $B$) are trained from snapshots taken from the proportional control of the circular cylinder. See figure \ref{fig:training_data} for the control input of the simulation data that $A$ and $B$ were trained from. In this case, the DMDc + MPC algorithm produces essentially the same control policy and successfully suppresses the vortex shedding.
 
 
-\begin{figure}
+\begin{figure}[ht]
   \centering
   \includegraphics[scale=0.5]{../images/training_data.png}
   \caption{Control policy for the training data. The control policy comes from a proportional controller measuring the y-velocity at a point in the wake}
