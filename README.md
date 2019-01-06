@@ -1,2 +1,2 @@
-# DDMC
-Data-Driven Modeling and Control
+# DMDc
+Dynamic Mode Decomposition with Control
