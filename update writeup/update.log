@@ -1,4 +1,4 @@
-This is LuaTeX, Version 0.95.0 (TeX Live 2016)  (format=lualatex 2017.5.2)  5 JAN 2019 16:47
+This is LuaTeX, Version 0.95.0 (TeX Live 2016)  (format=lualatex 2017.5.2)  5 JAN 2019 18:22
  restricted system commands enabled.
  file:line:error style messages enabled.
 **update.tex
@@ -23,7 +23,7 @@ Inserting `luaotfload.aux.patch_cambria_domh' at position 2 in `luaotfload.patch
 Inserting `luaotfload.aux.fixup_fontdata' at position 1 in `luaotfload.patch_font_unsafe'.
 Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font'.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'.
-luaotfload | main : initialization completed in 0.751 seconds
+luaotfload | main : initialization completed in 0.789 seconds
 Babel <3.9r> and hyphenation patterns for 1 language(s) loaded.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
@@ -721,11 +721,7 @@ Package caption Info: listings package is loaded.
 )
 \c@subfigure=\count190
 \c@subtable=\count191
-) (./update.aux
-
-LaTeX Warning: Label `fig:pred_error_working' multiply defined.
-
-)
+) (./update.aux)
 \openout1 = update.aux
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
@@ -811,45 +807,52 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (load luc: /Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc)(load luc: /Users/anthonycorso/Library/texlive/2016/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc) <../images/training_data.png, id=4, 438.63875pt x 296.10625pt>
 File: ../images/training_data.png Graphic file (type png)
  <use ../images/training_data.png>
-Package luatex.def Info: ../images/training_data.png used on input line 63.
+Package luatex.def Info: ../images/training_data.png used on input line 75.
 (luatex.def)             Requested size: 219.31883pt x 148.05275pt.
  <../images/dmdc_working.png, id=5, 849.1725pt x 294.09875pt>
 File: ../images/dmdc_working.png Graphic file (type png)
  <use ../images/dmdc_working.png>
-Package luatex.def Info: ../images/dmdc_working.png used on input line 71.
+Package luatex.def Info: ../images/dmdc_working.png used on input line 83.
 (luatex.def)             Requested size: 424.5852pt x 147.04901pt.
+ <../images/dmdc_offline_d1_resid_omega.png, id=6, 867.24pt x 289.08pt>
+File: ../images/dmdc_offline_d1_resid_omega.png Graphic file (type png)
+ <use ../images/dmdc_offline_d1_resid_omega.png>
+Package luatex.def Info: ../images/dmdc_offline_d1_resid_omega.png used on input line 94.
+(luatex.def)             Requested size: 433.61894pt x 144.53964pt.
  [1{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
-<../images/training_data.png><../images/dmdc_working.png>] <../images/pred_error_working.png, id=18, 428.60126pt x 297.11pt>
+<../images/training_data.png>] [2<../images/dmdc_working.png><../images/dmdc_offline_d1_resid_omega.png>] <../images/pred_error_working.png, id=24, 428.60126pt x 297.11pt>
 File: ../images/pred_error_working.png Graphic file (type png)
  <use ../images/pred_error_working.png>
-Package luatex.def Info: ../images/pred_error_working.png used on input line 97.
+Package luatex.def Info: ../images/pred_error_working.png used on input line 125.
 (luatex.def)             Requested size: 214.3001pt x 148.55463pt.
- <../images/pred_error_not_working.png, id=19, 424.58624pt x 297.11pt>
+
+<../images/dfc_control_input.png, id=25, 430.60875pt x 296.10625pt>
+File: ../images/dfc_control_input.png Graphic file (type png)
+ <use ../images/dfc_control_input.png>
+Package luatex.def Info: ../images/dfc_control_input.png used on input line 132.
+(luatex.def)             Requested size: 215.30383pt x 148.05275pt.
+ <../images/pred_error_not_working.png, id=26, 424.58624pt x 297.11pt>
 File: ../images/pred_error_not_working.png Graphic file (type png)
  <use ../images/pred_error_not_working.png>
-Package luatex.def Info: ../images/pred_error_not_working.png used on input line 104.
+Package luatex.def Info: ../images/pred_error_not_working.png used on input line 137.
 (luatex.def)             Requested size: 212.2926pt x 148.55463pt.
- [2<../images/pred_error_working.png><../images/pred_error_not_working.png>] (./update.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
-)
+ [3<../images/pred_error_working.png>] [4<../images/dfc_control_input.png><../images/pred_error_not_working.png>] (./update.aux))
 
 Here is how much of LuaTeX's memory you used:
- 25206 strings out of 494577
+ 25229 strings out of 494577
  100000,552014 words of node,token memory allocated
- 744 words of node memory still in use:
-   7 hlist, 2 vlist, 2 rule, 29 glue, 1 kern, 4 sub_mlist, 25 attribute, 52 glue_spec, 25 attribute_list, 1 write nodes
-   avail lists: 2:278,3:63,4:18,5:122,6:1546,7:469,8:24,9:151,10:8,11:124
- 28533 multiletter control sequences out of 65536+600000
+ 929 words of node memory still in use:
+   7 hlist, 2 vlist, 2 rule, 48 glue, 1 kern, 8 sub_mlist, 35 attribute, 52 glue_spec, 35 attribute_list, 1 write nodes
+   avail lists: 1:1,2:351,3:84,4:24,5:169,6:2414,7:679,8:23,9:190,10:8,11:195
+ 28544 multiletter control sequences out of 65536+600000
  50 fonts using 3034479 bytes
- 54i,12n,73p,823b,539s stack positions out of 5000i,500n,10000p,200000b,100000s
+ 54i,12n,73p,823b,541s stack positions out of 5000i,500n,10000p,200000b,100000s
 </usr/local/texlive/2016/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf></usr/local/texlive/2016/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on update.pdf (2 pages, 105564 bytes).
+Output written on update.pdf (4 pages, 226958 bytes).
 
-PDF statistics: 56 PDF objects out of 1000 (max. 8388607)
- 32 compressed objects within 1 object stream
+PDF statistics: 66 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 131072)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

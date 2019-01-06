@@ -286,10 +286,16 @@ INPUT ../images/training_data.png
 INPUT ../images/dmdc_working.png
 INPUT ../images/dmdc_working.png
 INPUT ../images/dmdc_working.png
+INPUT ../images/dmdc_offline_d1_resid_omega.png
+INPUT ../images/dmdc_offline_d1_resid_omega.png
+INPUT ../images/dmdc_offline_d1_resid_omega.png
 OUTPUT update.pdf
 INPUT ../images/pred_error_working.png
 INPUT ../images/pred_error_working.png
 INPUT ../images/pred_error_working.png
+INPUT ../images/dfc_control_input.png
+INPUT ../images/dfc_control_input.png
+INPUT ../images/dfc_control_input.png
 INPUT ../images/pred_error_not_working.png
 INPUT ../images/pred_error_not_working.png
 INPUT ../images/pred_error_not_working.png
