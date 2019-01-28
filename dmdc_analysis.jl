@@ -32,12 +32,32 @@ end
 function plot_suppression_performance(dir, iterations, output_img_name)
     # Load in cost and control input at desired iterations
     control, cost = get_scalar_sequences(dir, iterations, ["control_input", "cost"])
+    plot_suppression_performance(control, cost, output_img_name)
+end
 
-    # Plot the results and save
+function plot_suppression_performance(input_file, output_img_name)
+    # Load in cost and control input at desired iterations
+    f = h5open(input_file, "r")
+    control, cost = read(f, "control"), read(f, "cost")
+    close(f)
+    plot_suppression_performance(control, cost, output_img_name)
+end
+
+
+function plot_suppression_performance(control, cost, output_img_name)
     p1 = plot(iterations, cost, title = "Cost function vs. Iteration", xlabel="Iteration", ylabel = "Cost")
-    p2 = plot(iterations, control, title = "Control function vs.Iiteration", xlabel="Iteration", ylabel = "Control")
+    p2 = plot(iterations, control, title = "Control function vs. Iteration", xlabel="Iteration", ylabel = "Control")
     plot(p1, p2, size = (1200,400))
     savefig(output_file_name)
+end
+
+function save_suppression_performance(dir, iterations, output_filename)
+    control, cost = get_scalar_sequences(dir, iterations, ["control_input", "cost"])
+
+    h5open(output_filename, "w") do file
+        write(file, "control", control)
+        write(file, "cost", cost)
+    end
 end
 
 # A, B and Uhat are the dmdc params

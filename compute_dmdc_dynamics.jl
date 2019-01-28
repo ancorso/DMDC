@@ -19,6 +19,7 @@ if export_type == "matrix"
     filename = ARGS[2]
     f = h5open(filename, "r")
     X, u = read(f, "X"), read(f, "u")
+    close(f)
     X = reshape(X[data_index, :, :, :], (:, size(X, 4)))
     global Ω, Xp = vcat(X[:, 1:end-1], u[:,1:end]), X[:, 2:end]
 elseif export_type == "files"
