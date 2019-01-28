@@ -43,12 +43,11 @@ function plot_suppression_performance(input_file, output_img_name)
     plot_suppression_performance(control, cost, output_img_name)
 end
 
-
 function plot_suppression_performance(control, cost, output_img_name)
     p1 = plot(iterations, cost, title = "Cost function vs. Iteration", xlabel="Iteration", ylabel = "Cost")
     p2 = plot(iterations, control, title = "Control function vs. Iteration", xlabel="Iteration", ylabel = "Control")
     plot(p1, p2, size = (1200,400))
-    savefig(output_file_name)
+    savefig(output_img_name)
 end
 
 function save_suppression_performance(dir, iterations, output_filename)
