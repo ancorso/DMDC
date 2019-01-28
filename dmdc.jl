@@ -1,36 +1,53 @@
 using LinearAlgebra
 using StatsBase
 
-function sorted_eig(M)
-    D,V = eigen(M)
-    i = sortperm(D, lt = (x,y) -> real(x) < real(y), rev = true)
-    D = D[i]
-    V = V[:, i]
-    return D, V
+# Get the normalized singular values from the matrix
+function normalized_singular_values(X)
+    _, Σ, _ = svd(X)
+    cumsum(Σ[2:end].^2) / sum(Σ[2:end].^2)
 end
 
-function downsample(x, samples)
-    n = size(x, 1)
-    step = convert(Int, floor(n / samples))
-    return x[1:step:n, :]
+# Get the number of modes to keep for a specified amount of the energy to be maintained.
+# Rounds up to the closest even number
+function num_modes(Σ, retained_energy)
+    r = findfirst(cumsum(Σ[2:end].^2) / sum(Σ[2:end].^2) .> retained_energy)
+    Int(round(r/2, RoundUp)*2)
 end
 
-# Take the dynamic mode decomposition
-function DMD(X, Xp, thresh)
-    # take the singular value decomposition
-    U, S, V = svd(X)
-    r = length(S[S .> thresh])
+# Compute the dynamic mode decomposition with control
+function DMDc(Ω, Xp, retained_energy = 0.99)
+    n = size(Xp, 1)
+    q = size(Ω, 1) - n
+
+    # Compute the singular value decomposition of Omega (the input space)
+    U, Σ, V = svd(Ω)
+    r = num_modes(Σ, retained_energy)
 
     # Truncate the matrices
-    Ur, Sr, Vr = U[:,1:r], diagm(0 => S[1:r]), V[:, 1:r]
+    U_til, Σ_til, V_til = U[:,1:r], diagm(0 =>Σ[1:r]), V[:, 1:r]
 
-    # Computed linearized truncated dynamics
-    sinv = inv(Sr)
-    Atil = Ur' * Xp * Vr * sinv
-    D, W = sorted_eig(Atil)
-    phi = Xp * Vr * sinv * W
+    # Compute this efficient SVD of the output space Xp
+    U, Σ, V = svd(Xp)
+    rp = num_modes(Σ, retained_energy)
+    U_hat = U[:,1:rp] # note that U_hat' * U_hat \approx I
 
-    return Atil, phi, D, W, Ur
+
+    U_1 = U_til[1:n, :]
+    U_2 = U_til[n+1:n+q, :]
+    Σ_inv = inv(Σ_til)
+
+    A = U_hat' * Xp * V_til * Σ_inv * U_1' * U_hat
+    B = U_hat' * Xp * V_til * Σ_inv * U_2'
+
+    D, W = eigen(A)
+    ϕ = (Xp * V_til * Σ_inv) * (U_1' * U_hat * W)
+
+    return A, B, ϕ, W, U_hat
+end
+
+# Downsample the rows of matrix x, to get "nsamps" evenly spaces samples
+function downsample(x, nsamps)
+    return x[range(1, size(x, 1), length=nsamps), :]
 end
 
 function compressed_DMD(X, Xp, samples, thresh)
@@ -38,51 +55,18 @@ function compressed_DMD(X, Xp, samples, thresh)
     Yp = downsample(Xp, samples)
 
     # take the singular value decomposition
-    U, S, V = svd(Y)
-    r = length(S[S .> thresh])
-    r = 13
+    U, Σ, V = svd(Y)
+    r = length(Σ[Σ .> thresh])
 
     # Truncate the matrices
-    Ur, Sr, Vr = U[:,1:r], diagm(0 => S[1:r]), V[:, 1:r]
+    Ur, Σr, Vr = U[:,1:r], diagm(0 => Σ[1:r]), V[:, 1:r]
 
     # Computed linearized truncated dynamics
-    sinv = inv(Sr)
-    Atil = Ur' * Yp * Vr * sinv
-    D, W = sorted_eig(Atil)
-    phiy = Yp * Vr * sinv * W
-    phix = Xp * Vr * sinv * W
-    return Atil, phix, D
-end
-
-
-# Take the dynamic mode decomposition with control
-function DMDc(Omega, Xp, thresh)
-    n = size(Xp, 1)
-    q = size(Omega, 1) - n
-
-    # Compute the singular value decomposition of Omega (the input space)
-    U, S, V = svd(Omega)
-    r = length(S[S .> thresh]) # this is r_tilde
-
-    # Truncate the matrices
-    U_til, S_til, V_til = U[:,1:r], diagm(0 =>S[1:r]), V[:, 1:r]
-
-    # Compute this efficient SVD of the output space Xp
-    U, S, V = svd(Xp)
-    r = length(S[S .> thresh]) # this is the threshod for the output space and should be less than rtil (seems to be the case for the testcase tried)
-    U_hat = U[:,1:r] # note that U_hat' * U_hat \approx I
-
-
-    U_1 = U_til[1:n, :]
-    U_2 = U_til[n+1:n+q, :]
-    sinv = inv(S_til)
-
-    approxA = U_hat' * Xp * V_til * sinv * U_1' * U_hat
-    approxB = U_hat' * Xp * V_til * sinv * U_2'
-
-    D, W = eigen(approxA)
-    phi = (Xp * V_til * sinv) * (U_1' * U_hat * W)
-
-    return approxA, approxB, phi, W, U_hat
+    Σ_inv = inv(Σr)
+    A = Ur' * Yp * Vr * Σ_inv
+    D, W = eigen(A)
+    ϕy = Yp * Vr * Σ_inv * W
+    ϕx = Xp * Vr * Σ_inv * W
+    return A, ϕx, D
 end
 

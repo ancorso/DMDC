@@ -1,51 +1,37 @@
-include("read_data.jl")
+include("load_data.jl")
 include("dmdc.jl")
-include("helpers.jl")
 
 # Set window ranges
-dir = "sin_omega/"
+dir = "../cylinder_data/prop_control/"
 data_index = Colon()
-ts = 1 # training starting location
-te = 600 # training end
-thresh = 1e-9 # threshold for dmdc
-
-if length(ARGS) > 1
-    println(ARGS)
-    ts = parse(Int, ARGS[1])
-    te = parse(Int, ARGS[2])
-end
-w = te - ts
+file_range = 1:100
+thresh = 0.99 # Percent of energy retained in SVD
 
 # Load in the data from the files
-println("Loading in data from files....")
-data_dict = h5_to_dict(get_filename(1, dir))
-q = length(data_dict["control_input"])
-n = length(data_dict["sol_data"])
-(data_index != Colon()) && (n = div(n,4))
-Omega = Array{Float64,2}(undef, n+q, w)
-Xp = Array{Float64,2}(undef, n, w)
-# TODO:update this to fill in the appropriate snapshots
-fill_control_snapshots(Omega, Xp, dir, data_index, ts, te)
+Ω, Xp = load_data(dir, file_range, true, data_index)
 
-X = Omega[1:n, :]
-ind1, exact_sol1 = exact_sol_at_point(X)
-
-println("done")
+# Get the cumulative sum of energy from the singular values
+s = normalized_singular_values(Ω)
+sp = normalized_singular_values(Xp)
+plot(s, title="Cumulative Singular Value (SV) Energy", ylabel="Cumulative Energy in SVs", xlabel="Number of SVs", label="Ω", xscale=:log10, markershape = :circ)
+plot!(sp, label="X'", xscale=:log10, markershape = :circ)
+savefig("dmdc_example_singular_values")
 
 # perform the dynamic mode decomposition with control
-# A, B, phi, W, U_hat= DMDc(Omega[:,1:tw], Xp[:,1:tw], 1e-6)
-println("Performing dmdc...")
-A, B, phi, W, U_hat = DMDc(Omega, Xp, thresh)
-println("done")
+A, B, phi, W, U_hat = DMDc(Ω, Xp, thresh)
 
-# Save the results to the file
-h5open("A_B_Uhat.h5", "w") do file
-    write(file, "A", A)
-    write(file, "B", B)
-    write(file, "U_hat", U_hat)
+# Consider the first four modes
+r = size(A, 1)
+dofs = data_index == Colon() ? 4 : 1
+plots = []
+for dof = 1:dofs
+    for m = 1:r
+        mode = reshape(real(phi[:,m]), 4, 256, 128)
+        push!(plots, plot(1:256, 1:128, mode[dof,:,:]', title = string("Mode: ", m, " dof: ", dof)))
+    end
 end
 
-# ppx = reshape(real(phi[:,1]), 256, 128)[:,:]
-# plot(1:256, 1:128, ppx', fill=true)
-
+# Plot and save the modes for each degree of freedom
+plot(plots..., layout = (r, dofs), size = (600*dofs,400*r))
+savefig("dmdc_example_modes")
 
