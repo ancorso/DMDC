@@ -11,7 +11,7 @@ end
 # Rounds up to the closest even number
 function num_modes(Σ, retained_energy)
     r = findfirst(cumsum(Σ[2:end].^2) / sum(Σ[2:end].^2) .> retained_energy)
-    Int(round(r/2, RoundUp)*2)
+    Int(round((r+1)/2, RoundUp)*2)
 end
 
 # Compute the dynamic mode decomposition with control
