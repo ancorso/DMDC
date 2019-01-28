@@ -21,7 +21,7 @@ function get_scalar_sequences(dir, iterations, names::Array{String,1})
     i = 1
     for file_iter in iterations
         f = h5open(get_filename(dir, file_iter), "r")
-        for n in length(names)
+        for n in 1:length(names)
             vecs[n][i] = read(f, names[n])
         end
         close(f)
