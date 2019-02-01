@@ -8,7 +8,7 @@ file_range = 1:100
 thresh = 0.99 # Percent of energy retained in SVD
 
 # Load in the data from the files
-Ω, Xp = load_data(dir, file_range, true, data_index)
+Ω, Xp = load_data(dir, file_range, read_control = true, data_index = data_index)
 
 # Get the cumulative sum of energy from the singular values
 s = normalized_singular_values(Ω)

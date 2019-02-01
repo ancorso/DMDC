@@ -1,4 +1,5 @@
 include("load_data.jl")
+include("dmdc.jl")
 using Statistics
 using LinearAlgebra
 using Plots; gr()
@@ -44,12 +45,12 @@ end
 # Ω is the true data
 # starting_points are the iterations that the prediction should start at
 # T is the prediction window
-function average_prediction_error(A, B, U_hat, Ω, starting_points, T)
+function continuous_prediction_error(A, B, U_hat, Ω, starting_points, T; verbose = true)
     n = size(U_hat, 1)
     q = size(Ω,1) - n
     average_err = Float64[]
     for s in starting_points
-        println("Predicting from: ", s)
+        verbose && println("Predicting from: ",s)
         x = Ω[1:n,s]
         errl = Float64[]
         for i=s+1:s+T
@@ -62,6 +63,39 @@ function average_prediction_error(A, B, U_hat, Ω, starting_points, T)
         push!(average_err, mean(errl))
     end
     average_err
+end
+
+# Get the average prediction error over a run
+average_continuous_prediction_error(A, B, U_hat, Ω, starting_points, T; verbose = true) = mean(continuous_prediction_error(A, B, U_hat, Ω, starting_points, T, verbose = verbose))
+
+# Get the average continuous prediction err as a function of window size
+function get_error_vs_window_size(train_dir, test_dir, train_window_sizes, test_starting_points, T; verbose = true)
+    err = Float64[]
+    modes = Int[]
+    max_eig = Float64[]
+    Ω, Xp = load_data(train_dir, 1:750)
+    for sz in train_window_sizes
+        verbose && println("training on window size: ", sz)
+        A, B, phi, W, U_hat = DMDc(Ω[:,1:sz], Xp[:,1:sz], 0.99)
+        push!(modes, size(A,1))
+        push!(err, average_continuous_prediction_error(A,B,U_hat,Ω, test_starting_points, T, verbose = false))
+        push!(max_eig, maximum(abs.(eigvals(A))))
+    end
+    err, modes, max_eig
+end
+
+# Get the average continuous prediction err, mode count and maximum eigenvalues as a function of window size
+function plot_error_vs_window_size(train_dir, test_dir, train_window_sizes, test_starting_points, T, saveto)
+    err, modes, max_eig = get_error_vs_window_size(train_dir, test_dir, train_window_sizes, test_starting_points, T)
+    # Plot the results
+    p1 = plot(train_window_sizes, err, label="", title="Average Prediction Error", xlabel="Window Size", ylabel="Average Prediction Error")
+
+    p2 = plot(train_window_sizes, modes, label="", title="Number of Dynamic Modes vs. Window Size", xlabel="Window Size", ylabel = "Number of Dynamic Modes")
+
+    p3 = plot(train_window_sizes, max_eig, label="", title="Maximum Eigenvalue of DM vs. Window Size", xlabel="Window Size", ylabel = "Maximum Eigenvalue")
+
+    p = plot(p1, p2, p3)
+    savefig(p, saveto)
 end
 
 # Plots the prediction accuracy over a specified range
