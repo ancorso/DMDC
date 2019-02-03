@@ -15,20 +15,20 @@ function num_modes(Σ, retained_energy)
 end
 
 # Compute the dynamic mode decomposition with control
-function DMDc(Ω, Xp, retained_energy = 0.99)
+function DMDc(Ω, Xp, retained_energy = 0.99; num_modes_override = nothing)
     n = size(Xp, 1)
     q = size(Ω, 1) - n
 
     # Compute the singular value decomposition of Omega (the input space)
     U, Σ, V = svd(Ω)
-    r = num_modes(Σ, retained_energy)
+    r = (num_modes_override == nothing) ? num_modes(Σ, retained_energy) : num_modes_override
 
     # Truncate the matrices
     U_til, Σ_til, V_til = U[:,1:r], diagm(0 =>Σ[1:r]), V[:, 1:r]
 
     # Compute this efficient SVD of the output space Xp
     U, Σ, V = svd(Xp)
-    rp = num_modes(Σ, retained_energy)
+    rp = (num_modes_override == nothing) ? num_modes(Σ, retained_energy) : num_modes_override
     U_hat = U[:,1:rp] # note that U_hat' * U_hat \approx I
 
 

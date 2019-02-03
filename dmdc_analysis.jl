@@ -4,6 +4,28 @@ using Statistics
 using LinearAlgebra
 using Plots; gr()
 
+# Load the dynamics file
+function load_dynamics(file)
+    f = h5open(file, "r")
+    A, B, U_hat = read(f, "A"), read(f, "B"), read(f, "U_hat")
+    close(f)
+    A,B,U_hat
+end
+
+function plot_modes(dynamics_file, output_img)
+    _,_,U_hat = load_dynamics(dynamics_file)
+    r, dofs = size(U_hat, 2), 4
+    plots = []
+    for dof = 1:dofs
+        for m = 1:r
+            mode = reshape(real(U_hat[:,m]), 4, 256, 128)
+            push!(plots, plot(1:256, 1:128, mode[dof,:,:]', title = string("Mode: ", m, " dof: ", dof), size=(600,400)))
+        end
+    end
+    plot(plots..., layout = (dofs, r), size = (600*r,400*dofs))
+    savefig(output_img)
+end
+
 # See what the percent difference that should be expected between frames
 function expected_errs(X, n)
     w = size(X,2)
@@ -102,9 +124,7 @@ end
 function plot_prediction_accuracy(dynamics_file, dir, starting_points, T, output_img_name; read_control = true, data_index = Colon())
     # Load the dynamics
     print("Loading Dynamics...")
-    f = h5open(dynamics_file, "r")
-    A, B, U_hat = read(f, "A"), read(f, "B"), read(f, "U_hat")
-    close(f)
+    A,B,U_hat = loat_dynamics(dynamics_file)
 
     # Load the comparison data
     print("Loading Comparison Data...")
@@ -117,7 +137,7 @@ end
 function plot_prediction_accuracy(A, B, U_hat, Ω, starting_points, T, output_img_name)
     # Compute the average running error
     print("Running preditions:")
-    avg_err = average_prediction_error(A, B, U_hat, Ω, starting_points, T)
+    avg_err = continuous_prediction_error(A, B, U_hat, Ω, starting_points, T)
 
     # Plot the results
     print("Plotting...")
