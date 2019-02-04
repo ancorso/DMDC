@@ -12,9 +12,10 @@ function load_dynamics(file)
     A,B,U_hat
 end
 
-function plot_modes(dynamics_file, output_img)
+function plot_modes(dynamics_file, output_img, num_modes = nothing)
     _,_,U_hat = load_dynamics(dynamics_file)
-    r, dofs = size(U_hat, 2), 4
+    r = (num_modes == nothing) ? size(U_hat, 2) : num_modes
+    dofs = 4
     plots = []
     for dof = 1:dofs
         for m = 1:r
@@ -23,6 +24,18 @@ function plot_modes(dynamics_file, output_img)
         end
     end
     plot(plots..., layout = (dofs, r), size = (600*r,400*dofs))
+    savefig(output_img)
+end
+
+function plot_B(dynamics_file, output_img)
+    _,B,U_hat = load_dynamics(dynamics_file)
+
+    B = reshape(U_hat * B, 4, 256, 128)
+    p1 = plot(1:256, 1:128, B[1,:,:]', title="Density Control")
+    p2 = plot(1:256, 1:128, B[2,:,:]', title="X-Velocity Control")
+    p3 = plot(1:256, 1:128, B[3,:,:]', title="Y-Velocity Control")
+    p4 = plot(1:256, 1:128, B[4,:,:]', title="Energy Control")
+    plot(p1,p2,p3,p4)
     savefig(output_img)
 end
 
@@ -124,7 +137,7 @@ end
 function plot_prediction_accuracy(dynamics_file, dir, starting_points, T, output_img_name; read_control = true, data_index = Colon())
     # Load the dynamics
     print("Loading Dynamics...")
-    A,B,U_hat = loat_dynamics(dynamics_file)
+    A,B,U_hat = load_dynamics(dynamics_file)
 
     # Load the comparison data
     print("Loading Comparison Data...")

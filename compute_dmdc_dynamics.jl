@@ -10,7 +10,7 @@ export_type = ARGS[1]
 
 # Non-input parameters
 data_index = Colon()
-thresh = 0.99 # Percent of energy retained in SVD
+thresh = 0.99 # Fraction of energy retained in SVD
 output_filename = "A_B_Uhat.h5"
 num_modes_override = nothing
 
