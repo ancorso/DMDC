@@ -159,22 +159,14 @@ function plot_prediction_accuracy(A, B, U_hat, Ω, starting_points, T, output_im
     println("done!")
 end
 
-function make_side_by_side_vids()
-    # fldr = "dmdc_30Dec_A_from_prop/"
-    # min_file = 1
-    # max_file = 754
-    #
-    # anim = @animate for iteration in range(min_file, max_file)
-    #     println("Loading file: ", iteration)
-    #     dict = h5_to_dict(get_filename(iteration, fldr))
-    #     sol_data = dict["sol_data"][3,:,:]
-    #     p = plot(1:256, 1:128, sol_data')
-    #     title!(string("Y-Vel at Iteration: ", iteration))
-    # end
-    #
-    #
-    # gif(anim, string(rstrip(fldr, ['/']), ".gif"), fps=25)
+function make_vid_from_solution(dir, iter_range, data_index, data_name, output_img; fps = 25)
+    anim = @animate for iteration in iter_range
+        dict = h5_to_dict(get_filename(dir,iteration))
+        sol_data = dict["sol_data"][data_index,:,:]
+        plot(1:256, 1:128, sol_data', title = string(data_name, " at Iteration: ", iteration))
+    end
 
+    gif(anim, output_img, fps=25)
 end
 
 
