@@ -76,6 +76,15 @@ function plot_suppression_performance(dir, iterations, output_img_name)
     savefig(output_img_name)
 end
 
+function plot_control(dir, iterations, output_img_name)
+    # Load in cost and control input at desired iterations
+    control = get_scalar_sequences(dir, iterations, ["control_input"])
+
+    # Plot the performance
+    plot(iterations, control, title = "Control function vs. Iteration", xlabel="Iteration", ylabel = "Control")
+    savefig(output_img_name)
+end
+
 # A, B and Uhat are the dmdc params
 # Ω is the true data
 # starting_points are the iterations that the prediction should start at
