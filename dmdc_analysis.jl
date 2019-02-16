@@ -2,7 +2,7 @@ include("load_data.jl")
 include("dmdc.jl")
 using Statistics
 using LinearAlgebra
-using Plots; gr()
+using Plots; pyplot()
 using ImageFiltering
 
 # Load the dynamics file
@@ -173,7 +173,7 @@ end
 function plot_h5(file, data_index, output_img, title)
     dict = h5_to_dict(file)
     sol_data = dict["sol_data"][data_index,:,:]
-    sol_data = imfilter(sol_data, Kernel.gaussian(2))[:]
+    sol_data = imfilter(sol_data, Kernel.gaussian(2))
     plot(1:256, 1:128, sol_data', title = title, xlabel="X", ylabel="Y")
     savefig(output_img)
 end
@@ -183,8 +183,8 @@ function make_vid_from_solution(dir, iter_range, data_index, data_name, output_i
     anim = @animate for iteration in iter_range
         dict = h5_to_dict(get_filename(dir,iteration))
         sol_data = dict["sol_data"][data_index,:,:]
-        sol_data = imfilter(sol_data, Kernel.gaussian(2))[:]
-        plot(1:256, 1:128, sol_data', title = string(data_name, " at Iteration: ", iteration))
+        sol_data = imfilter(sol_data, Kernel.gaussian(2))
+        plot(1:256, 1:128, sol_data', title = string(data_name, " at Iteration: ", iteration), xlabel="X", ylabel="Y")
     end
 
     gif(anim, output_img, fps=25)
