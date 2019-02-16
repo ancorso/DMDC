@@ -31,12 +31,12 @@ function get_scalar_sequences(dir, iterations, names::Array{String,1})
 end
 
 # Load data from the circular cylinder with or without control
-function load_data(dir, iterations; data_index = Colon(), get_next_frame = true, read_control = true)
+function load_data(dir, iterations; data_index = Colon(), get_next_frame = true, read_control = true, set_control_0 = false)
     next_iterations = iterations .+ 1 # Get the indices of the next frame
     nc = length(iterations) # The number of columns in the output matrices
     d = h5_to_dict(get_filename(dir, iterations[1])) # read the first data to get the size of the output
     n = length(d["sol_data"]) # The number of rows in Xp
-    nr =  read_control ? n + length(d["control_input"]) : n # The number of rows in X
+    nr =  read_control ? n + ((set_control_0) ? 1 : length(d["control_input"])) : n # The number of rows in X
     X = Array{Float64,2}(undef, nr, nc)
     Xp = get_next_frame ?  Array{Float64,2}(undef, n, nc) : Float64[]
 
@@ -46,7 +46,8 @@ function load_data(dir, iterations; data_index = Colon(), get_next_frame = true,
         xpi = findall(next_iterations .== i)
         if !isempty(xi)
             X[1:n, xi[1]] = d["sol_data"][data_index, :, :][:]
-            (read_control) && (X[n+1:nr, xi[1]] = [d["control_input"]])
+            (read_control && !set_control_0) && (X[n+1:nr, xi[1]] = [d["control_input"]])
+            (read_control && set_control_0) && (X[n+1:nr, xi[1]] = [0])
         end
         (get_next_frame && !isempty(xpi)) && (Xp[:, xpi[1]] = d["sol_data"][data_index, :, :][:])
     end
