@@ -170,7 +170,7 @@ end
 # Plots the prediction accuracy over a specified range
 function plot_prediction_accuracy(A, B, transform, Ω, starting_points, T, output_img_name)
     # Compute the average running error
-    print("Running preditions:")
+    print("Running predictions...")
     # avg_err_B = continuous_prediction_error(A, B, transform, Ω, starting_points, T)
     # avg_err_noB = continuous_prediction_error(A, zeros(size(B)), transform, Ω, starting_points, T)
 
@@ -179,7 +179,7 @@ function plot_prediction_accuracy(A, B, transform, Ω, starting_points, T, outpu
 
     # Plot the results
     print("Plotting...")
-    p = plot(log.(avg_err_B), xlabel = "Iteration", ylabel="log(Average Error)", title = string("Average Prediction Error"), label = "With Control")
+    p = plot(log.(avg_err_B), xlabel = "Iteration", ylabel="log(Average Error)", title = string("Average Prediction Error"), label = "With Control", legend = :bottomright)
     plot!(log.(avg_err_noB), label = "No Control")
     savefig(output_img_name)
     println("done!")
@@ -205,6 +205,47 @@ function make_vid_from_solution(dir, iter_range, data_index, data_name, output_i
 
     gif(anim, output_img, fps=25)
 end
+
+function find_max_sol_file_num(dir, base, ext)
+    files = readdir(dir)
+    num = maximum([parse(Int, match(Regex("$(base)([0-9]{4})$(ext)"), f).captures[1]) for f in files])
+end
+
+function find_dynamics_file(dir)
+    files = readdir(dir)
+    for f in files
+        m = match(r".*dynamics.*\.h5", f)
+        if m != nothing
+            return m.match
+        end
+    end
+    return "NO MATCH FOUND"
+end
+
+if length(ARGS) > 0
+    dir = "sol_data/"
+    max_file_num = find_max_sol_file_num(dir, "sol_data_", ".h5")
+    iter_range = 1:max_file_num
+    dynamics_file = find_dynamics_file(".")
+    println("Dynamics file: ", dynamics_file)
+
+    for option in ARGS
+        println("option processing: ", option)
+        if option == "make_vid_from_solution"
+            make_vid_from_solution(dir, iter_range, 3, "Y-Vel", "solution_vid.gif")
+        elseif option == "plot_prediction_accuracy"
+            plot_prediction_accuracy(dynamics_file, dir, 50, min(200,max_file_num), "prediction_accuracy")
+        elseif option == "plot_suppression_performance"
+            plot_suppression_performance(dir, iter_range, "suppression_performance")
+        elseif option == "plot_B"
+            plot_B(dynamics_file, "control_response")
+        else
+            @error string("Unrecognized command: ", ARGS[1])
+        end
+    end
+
+end
+
 
 
 
