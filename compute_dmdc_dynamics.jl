@@ -6,18 +6,18 @@
 #           2) julia compute_dmdc_dynamics.jl files dir first_iter last_iter
 include("dmdc.jl")
 
-export_type = ARGS[1]
+export_type = ARGS[2]
 
 # Non-input parameters
 data_index = Colon()
-thresh = 0.99 # Fraction of energy retained in SVD
-output_filename = "A_B_Uhat.h5"
+thresh = 0.99999 # Fraction of energy retained in SVD
+output_filename = ARGS[1]
 num_modes_override = nothing
 
 # Load in the data by whatever means specified
 print("Loading data...")
 if export_type == "matrix"
-    filename = ARGS[2]
+    filename = ARGS[3]
     f = h5open(filename, "r")
     X, u = read(f, "X"), read(f, "u")
     close(f)
@@ -25,10 +25,10 @@ if export_type == "matrix"
     global Ω, Xp = vcat(X[:, 1:end-1], u[:,1:end]), X[:, 2:end]
 elseif export_type == "files"
     include("load_data.jl")
-    dir, tstart, tend = ARGS[2], parse(Int, ARGS[3]), parse(Int, ARGS[4])
-    if length(ARGS) == 5
-        print("Setting mode count override to ", ARGS[5], "...")
-        num_modes_override = parse(Int, ARGS[5])
+    dir, tstart, tend = ARGS[3], parse(Int, ARGS[4]), parse(Int, ARGS[5])
+    if length(ARGS) == 6
+        print("Setting mode count override to ", ARGS[6], "...")
+        num_modes_override = parse(Int, ARGS[6])
     end
     global Ω, Xp = load_data(dir, tstart:tend, data_index = data_index)
 else
@@ -37,13 +37,15 @@ end
 
 # Compute the dynamics
 print("Computing DMDc...")
-A, B, phi, D, U_hat = DMDc(Ω, Xp, thresh, num_modes_override = num_modes_override)
+A, B, phi, D, transform = DMDc(Ω, Xp, thresh, num_modes_override = num_modes_override)
 
 # save the corresponding dynamics
 print("Saving file to \"", output_filename, "\"...")
 h5open(output_filename, "w") do file
     write(file, "A", A)
     write(file, "B", B)
-    write(file, "U_hat", U_hat)
+    write(file, "transform", transform)
+    close(file)
 end
+
 println("done!")

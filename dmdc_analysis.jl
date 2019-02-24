@@ -8,19 +8,21 @@ using ImageFiltering
 # Load the dynamics file
 function load_dynamics(file)
     f = h5open(file, "r")
-    A, B, U_hat = read(f, "A"), read(f, "B"), read(f, "U_hat")
+    A, B, transform = read(f, "A"), read(f, "B"), read(f, "transform")
     close(f)
-    A,B,U_hat
+
+    A, B, transform
 end
 
 function plot_modes(dynamics_file, output_img, num_modes = nothing)
-    _,_,U_hat = load_dynamics(dynamics_file)
-    r = (num_modes == nothing) ? size(U_hat, 2) : num_modes
+    _,_,transform = load_dynamics(dynamics_file)
+    modes = pinv(transform)
+    r = (num_modes == nothing) ? size(modes, 2) : num_modes
     dofs = 4
     plots = []
     for dof = 1:dofs
         for m = 1:r
-            mode = reshape(real(U_hat[:,m]), 4, 256, 128)
+            mode = reshape(real(modes[:,m]), 4, 256, 128)
             push!(plots, plot(1:256, 1:128, mode[dof,:,:]', title = string("Mode: ", m, " dof: ", dof), size=(600,400)))
         end
     end
@@ -29,9 +31,9 @@ function plot_modes(dynamics_file, output_img, num_modes = nothing)
 end
 
 function plot_B(dynamics_file, output_img)
-    _,B,U_hat = load_dynamics(dynamics_file)
+    _,B,transform = load_dynamics(dynamics_file)
 
-    B = reshape(U_hat * B, 4, 256, 128)
+    B = reshape(pinv(transform) * B, 4, 256, 128)
     p1 = plot(1:256, 1:128, B[1,:,:]', title="Density Control")
     p2 = plot(1:256, 1:128, B[2,:,:]', title="X-Velocity Control")
     p3 = plot(1:256, 1:128, B[3,:,:]', title="Y-Velocity Control")
@@ -86,32 +88,41 @@ function plot_control(dir, iterations, output_img_name)
     savefig(output_img_name)
 end
 
-# A, B and Uhat are the dmdc params
+function prediction_error(A, B, transform, Ω, s, T)
+    n = size(transform, 2)
+    q = size(Ω,1) - n
+    x0 = Ω[1:n,s] # starting situation
+    u = Ω[end,:]
+    b = transform*x0
+    detransform = pinv(transform)
+
+    errl = Float64[]
+    for i=s+1:s+T-1
+        b = A*b + B*u[i+1]
+        x = detransform * b
+
+        push!(errl, norm(Ω[1:n, i] - x))
+    end
+    return errl
+end
+
+
+# A, B and transform are the dmdc params
 # Ω is the true data
 # starting_points are the iterations that the prediction should start at
 # T is the prediction window
-function continuous_prediction_error(A, B, U_hat, Ω, starting_points, T; verbose = true)
-    n = size(U_hat, 1)
-    q = size(Ω,1) - n
+function continuous_prediction_error(A, B, transform, Ω, starting_points, T; verbose = true)
+    println("size of A: ", size(A))
     average_err = Float64[]
     for s in starting_points
         verbose && println("Predicting from: ",s)
-        x = Ω[1:n,s]
-        errl = Float64[]
-        for i=s+1:s+T
-            xtil = U_hat' * x
-            Xtil_p1 = A * xtil + B * Ω[n+1:n+q, i-1]
-            x = U_hat * Xtil_p1
-
-            push!(errl, norm(Ω[1:n, i] - x))
-        end
-        push!(average_err, mean(errl))
+        push!(average_err, mean(prediction_error(A, B, transform, Ω, s, T)))
     end
     average_err
 end
 
 # Get the average prediction error over a run
-average_continuous_prediction_error(A, B, U_hat, Ω, starting_points, T; verbose = true) = mean(continuous_prediction_error(A, B, U_hat, Ω, starting_points, T, verbose = verbose))
+average_continuous_prediction_error(A, B, transform, Ω, starting_points, T; verbose = true) = mean(continuous_prediction_error(A, B, transform, Ω, starting_points, T, verbose = verbose))
 
 # Get the average continuous prediction err as a function of window size
 function get_error_vs_window_size(train_dir, test_dir, train_window_sizes, test_starting_points, T; verbose = true)
@@ -121,9 +132,9 @@ function get_error_vs_window_size(train_dir, test_dir, train_window_sizes, test_
     Ω, Xp = load_data(train_dir, 1:750)
     for sz in train_window_sizes
         verbose && println("training on window size: ", sz)
-        A, B, phi, W, U_hat = DMDc(Ω[:,1:sz], Xp[:,1:sz], 0.99)
+        A, B, phi, W, transform = DMDc(Ω[:,1:sz], Xp[:,1:sz], 0.99)
         push!(modes, size(A,1))
-        push!(err, average_continuous_prediction_error(A,B,U_hat,Ω, test_starting_points, T, verbose = false))
+        push!(err, average_continuous_prediction_error(A, B, transform, Ω, test_starting_points, T, verbose = false))
         push!(max_eig, maximum(abs.(eigvals(A))))
     end
     err, modes, max_eig
@@ -147,24 +158,29 @@ end
 function plot_prediction_accuracy(dynamics_file, dir, starting_points, T, output_img_name; read_control = true, data_index = Colon())
     # Load the dynamics
     print("Loading Dynamics...")
-    A,B,U_hat = load_dynamics(dynamics_file)
+    A, B, transform = load_dynamics(dynamics_file)
 
     # Load the comparison data
     print("Loading Comparison Data...")
     Ω = load_data(dir, 1:maximum(starting_points) + T, read_control = read_control, data_index = data_index, get_next_frame = false)
 
-    plot_prediction_accuracy(A, B, U_hat, Ω, starting_points, T, output_img_name)
+    plot_prediction_accuracy(A, B, transform, Ω, starting_points, T, output_img_name)
 end
 
 # Plots the prediction accuracy over a specified range
-function plot_prediction_accuracy(A, B, U_hat, Ω, starting_points, T, output_img_name)
+function plot_prediction_accuracy(A, B, transform, Ω, starting_points, T, output_img_name)
     # Compute the average running error
     print("Running preditions:")
-    avg_err = continuous_prediction_error(A, B, U_hat, Ω, starting_points, T)
+    # avg_err_B = continuous_prediction_error(A, B, transform, Ω, starting_points, T)
+    # avg_err_noB = continuous_prediction_error(A, zeros(size(B)), transform, Ω, starting_points, T)
+
+    avg_err_B = prediction_error(A, B, transform, Ω, starting_points, T)
+    avg_err_noB = prediction_error(A, zeros(size(B)), transform, Ω, starting_points, T)
 
     # Plot the results
     print("Plotting...")
-    p = plot(starting_points, log.(avg_err), xlabel = "Iteration", ylabel="log(Average Error)", title = string("Average Prediction Error"))
+    p = plot(log.(avg_err_B), xlabel = "Iteration", ylabel="log(Average Error)", title = string("Average Prediction Error"), label = "With Control")
+    plot!(log.(avg_err_noB), label = "No Control")
     savefig(output_img_name)
     println("done!")
 end

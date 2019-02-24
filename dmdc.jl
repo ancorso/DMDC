@@ -40,9 +40,12 @@ function DMDc(Ω, Xp, retained_energy = 0.99; num_modes_override = nothing)
     B = U_hat' * Xp * V_til * Σ_inv * U_2'
 
     D, W = eigen(A)
-    ϕ = (Xp * V_til * Σ_inv) * (U_1' * U_hat * W)
 
-    return A, B, ϕ, W, U_hat
+    new_U_hat = (Xp * V_til * Σ_inv) * (U_1' * U_hat)
+    ϕ =  new_U_hat * W
+    transform = pinv(new_U_hat)
+
+    return A, B, ϕ, W, transform
 end
 
 # Downsample the rows of matrix x, to get "nsamps" evenly spaces samples
