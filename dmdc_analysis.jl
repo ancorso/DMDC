@@ -114,8 +114,10 @@ end
 function continuous_prediction_error(A, B, transform, Ω, starting_points, T; verbose = true)
     println("size of A: ", size(A))
     average_err = Float64[]
+    i = 0
     for s in starting_points
-        verbose && println("Predicting from: ",s)
+        verbose && (i % 100 == 0) && println("Predicting from: ",s)
+        i = i+1
         push!(average_err, mean(prediction_error(A, B, transform, Ω, s, T)))
     end
     average_err
