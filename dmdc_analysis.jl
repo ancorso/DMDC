@@ -267,7 +267,7 @@ if length(ARGS) > 0
         elseif option == "plot_prediction_accuracy"
             plot_prediction_accuracy(dynamics_file, dir, 50, min(200,max_file_num), "prediction_accuracy")
         elseif option == "plot_continuous_prediction_accuracy"
-            plot_continuous_prediction_accuracy(dynamics_file, dir, 50:3:max_file_num, T, "continuous_prediction_accuracy")
+            plot_continuous_prediction_accuracy(dynamics_file, dir, 50:3:max_file_num-T, T, "continuous_prediction_accuracy")
         elseif option == "plot_suppression_performance"
             plot_suppression_performance(dir, iter_range, "suppression_performance")
         elseif option == "plot_B"
