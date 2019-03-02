@@ -255,9 +255,10 @@ if length(ARGS) > 0
     dir = "sol_data/"
     max_file_num = find_max_sol_file_num(dir, "sol_data_", ".h5")
     iter_range = 1:max_file_num
+    T = 32
     dynamics_file = find_dynamics_file(".")
     println("Dynamics file: ", dynamics_file)
-    T = 32
+
 
     for option in ARGS
         println("option processing: ", option)
@@ -266,7 +267,7 @@ if length(ARGS) > 0
         elseif option == "plot_prediction_accuracy"
             plot_prediction_accuracy(dynamics_file, dir, 50, min(200,max_file_num), "prediction_accuracy")
         elseif option == "plot_continuous_prediction_accuracy"
-            plot_continuous_prediction_accuracy(dynamics_file, dir, 50, 1:T:max_file_num-T, "continuous_prediction_accuracy")
+            plot_continuous_prediction_accuracy(dynamics_file, dir, 50:3:max_file_num, T, "continuous_prediction_accuracy")
         elseif option == "plot_suppression_performance"
             plot_suppression_performance(dir, iter_range, "suppression_performance")
         elseif option == "plot_B"
