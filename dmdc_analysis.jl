@@ -179,7 +179,36 @@ function plot_prediction_accuracy(A, B, transform, Ω, starting_points, T, outpu
 
     # Plot the results
     print("Plotting...")
-    p = plot(log.(avg_err_B), xlabel = "Iteration", ylabel="log(Average Error)", title = string("Average Prediction Error"), label = "With Control", legend = :bottomright)
+    p = plot(log.(avg_err_B), xlabel = "Iteration", ylabel="log(Average Error)", title = string("Prediction Error from Initial State"), label = "With Control", legend = :bottomright)
+    plot!(log.(avg_err_noB), label = "No Control")
+    savefig(output_img_name)
+    println("done!")
+end
+
+
+# Plots the continuous average prediction accuracy over a specified range
+function plot_continuous_prediction_accuracy(dynamics_file, dir, starting_points, T, output_img_name; read_control = true, data_index = Colon())
+    # Load the dynamics
+    print("Loading Dynamics...")
+    A, B, transform = load_dynamics(dynamics_file)
+
+    # Load the comparison data
+    print("Loading Comparison Data...")
+    Ω = load_data(dir, 1:maximum(starting_points) + T, read_control = read_control, data_index = data_index, get_next_frame = false)
+
+    plot_continuous_prediction_accuracy(A, B, transform, Ω, starting_points, T, output_img_name)
+end
+
+# Plots the moving average prediction accuracy
+function plot_continuous_prediction_accuracy(A, B, transform, Ω, starting_points, T, output_img_name)
+    # Compute the average running error
+    print("Running predictions...")
+    avg_err_B = continuous_prediction_error(A, B, transform, Ω, starting_points, T)
+    avg_err_noB = continuous_prediction_error(A, zeros(size(B)), transform, Ω, starting_points, T)
+
+    # Plot the results
+    print("Plotting...")
+    p = plot(log.(avg_err_B), xlabel = "Iteration", ylabel="log(Average Error)", title = string("Average Prediction Error over Next $T Timesteps"), label = "With Control", legend = :bottomright)
     plot!(log.(avg_err_noB), label = "No Control")
     savefig(output_img_name)
     println("done!")
@@ -228,6 +257,7 @@ if length(ARGS) > 0
     iter_range = 1:max_file_num
     dynamics_file = find_dynamics_file(".")
     println("Dynamics file: ", dynamics_file)
+    T = 32
 
     for option in ARGS
         println("option processing: ", option)
@@ -235,12 +265,14 @@ if length(ARGS) > 0
             make_vid_from_solution(dir, iter_range, 3, "Y-Vel", "solution_vid.gif")
         elseif option == "plot_prediction_accuracy"
             plot_prediction_accuracy(dynamics_file, dir, 50, min(200,max_file_num), "prediction_accuracy")
+        elseif option == "plot_continuous_prediction_accuracy"
+            plot_continuous_prediction_accuracy(dynamics_file, dir, 50, 1:T:max_file_num-T, "continuous_prediction_accuracy")
         elseif option == "plot_suppression_performance"
             plot_suppression_performance(dir, iter_range, "suppression_performance")
         elseif option == "plot_B"
             plot_B(dynamics_file, "control_response")
         else
-            @error string("Unrecognized command: ", ARGS[1])
+            @error string("Unrecognized command: ", option)
         end
     end
 

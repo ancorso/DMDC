@@ -2,8 +2,8 @@
 # directly from PyFR.
 # This is used to contruct the initial A,B,and U, or those used for offline DMDc
 # usage:
-#           1) julia compute_dmdc_dynamics.jl matrix filename
-#           2) julia compute_dmdc_dynamics.jl files dir first_iter last_iter
+#           1) julia compute_dmdc_dynamics.jl output_name matrix filename
+#           2) julia compute_dmdc_dynamics.jl output_name files dir first_iter last_iter
 include("dmdc.jl")
 
 export_type = ARGS[2]
